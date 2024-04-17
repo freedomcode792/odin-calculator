@@ -78,8 +78,13 @@ button{
     width: 50px;
 }
 
+#top-group{
+    width: 100%;
+    display: flex;
+}
+
 button:hover{
-    
+
 }
 
 
