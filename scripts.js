@@ -24,7 +24,7 @@ function multiply (num1 = 3,num2 = 4) { return num1*num2; }
 function divide(num1 = 6, num2 = 3){ return num1 / num2; }
 
 function operate(op, num1, num2 ){
-
+    
 }
 
 
