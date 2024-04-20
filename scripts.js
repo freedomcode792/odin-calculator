@@ -35,26 +35,70 @@ const operationsData = {
     operand1 : "",
     operand2 : "",
     sign : "",
-    appendNumber : function (char){
-        if(!sign){
-            this.operand1 += char;
-        } else if (sign){
-            this.operand2 += char;
+
+
+
+    appendNumberOrDot : function (char){
+        sign ? (this.operand1 +=char) : (this.operand2 += char)
+    },
+
+    removeChar : function (){
+
+    },
+
+    signAllowed : function(){
+        if (this.sign){
+            if(this.operand2){
+                return this.operand2 ? this.operand2.match(/.+\.$/) ? false : true : false;
+            }
+        } else {
+            return this.operand1 ? this.operand1.match(/.+\.$/) ? false : true : false;
         }
-    }
+    },
+
+    // dotIsAllowed : function(){
+    //     if(sign){
+    //         if (this.operand2){
+    //             return !(this.operand1.match(/[.]/));
+    //         } else {
+    //             return false;
+    //         }
+    //     } else if (!sign){
+    //         if (this.operand1){
+    //             return !(this.operand2.match(/[.]/));
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // }
+
+    
+
 }
 const numpadButtons = document.querySelectorAll(".digit-button");
+const dotButton = document.querySelector("#dot-button");
+const signButtons = document.querySelectorAll("sign-button");
+
+dotButton.addEventListener("click", function(){
+    displayInput(this.dataset.value);
+    operationsData.appendNumberOrDot(this.dataset.value);
+});
+
+signButtons.forEach(function(signButton){
+    signButton.addEventListener("click", function(){
+
+    });
+});
 
 numpadButtons.forEach(function (numButton){
     numButton.addEventListener("click", function(){
         displayInput(this.dataset.value);
-    })});
-        
+        operationsData.appendNumberOrDot(this.dataset.value);
+    })
+});
         
 
-function checkInput(){
 
-}
 
 function displayInput(charInput){
     if(inputSection.textContent.match(/[a-z]/i)){
@@ -63,9 +107,7 @@ function displayInput(charInput){
     inputSection.textContent += charInput;
 }
 
-function checkSign(currentCharInput){
-    if(1){}
-}
+
 
 /*
     Break the process into components
@@ -84,6 +126,27 @@ function checkSign(currentCharInput){
             
 
         }
+
+It should work like so:
+        1. The user presses number buttons and types the first operand {
+            - Operands should be typed digit by digit
+            - Each digit has to be added to the data object {
+                  - The digit has to be added to the appropriate operand1 {
+                        - if a sign hasn't been pressed -> add digit to operand1
+                        - if a sign is pressed -> add digit to operand2
+                    }
+                  - There has to be a check to verify if it's really a digit {
+                        - It will probably be appropriate to put all methods related 
+                        to data addition, manipulation and checks into the Data object.
+                    }
+              }
+            - Each new digit should be added to the Input section
+        }
+
+        2. The user presses a sign and the first number is complete. The second number starts
+        3. The user types in the second operand until them press OPERATE (=) sign
+        4. The expression is calculated and the result is displayed in the output section
+
 */      
 
 
