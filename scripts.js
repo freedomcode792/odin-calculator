@@ -2,11 +2,11 @@ const outputSection = document.querySelector("#output");
 
 const inputSection = document.querySelector("#input");
 
-let sign = "+";
-let num1 = 3;
-let num2 = 6;
+// let sign = "+";
+// let num1 = 3;
+// let num2 = 6;
 
-console.table(sign,num1,num2);
+// console.table(sign,num1,num2);
 
 function displayResult(data, functionName){
     //output.textContent = data;
@@ -36,24 +36,26 @@ const operationsData = {
     operand2 : "",
     sign : "",
 
+    getCurrentOperandKey : function(){
+        return this.sign === "" ? "operand1" : "operand2";
+    },
 
+    checkIfDotAllowed : function (){
+        const currentOperandValue = this[this.getCurrentOperandKey()];
+
+        return currentOperandValue === "" ? false : !(currentOperandValue.includes("."));
+    },
 
     appendNumberOrDot : function (char){
-        sign ? (this.operand1 +=char) : (this.operand2 += char)
+        this[this.getCurrentOperandKey()] += char;
     },
 
     removeChar : function (){
 
     },
-
+    
     signAllowed : function(){
-        if (this.sign){
-            if(this.operand2){
-                return this.operand2 ? this.operand2.match(/.+\.$/) ? false : true : false;
-            }
-        } else {
-            return this.operand1 ? this.operand1.match(/.+\.$/) ? false : true : false;
-        }
+        
     },
 
     // dotIsAllowed : function(){
