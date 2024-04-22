@@ -54,8 +54,24 @@ const operationsData = {
 
     },
     
-    signAllowed : function(){
-        
+    checkIfSignAllowed : function(){
+        const currentOperandValue = this[this.getCurrentOperandKey()];
+        if(currentOperandValue){
+            console.log("Operand Defined");
+            
+            if(this.getCurrentOperandKey()==="operand2"){
+                console.log("Only one operation for two operands")
+                return false;
+            } else if(currentOperandValue.match(/.+\.$/)){
+                console.log("Finish filling in the decimals");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            console.log("Fill in the number");
+            return false;
+        }
     },
 
     // dotIsAllowed : function(){
@@ -79,16 +95,22 @@ const operationsData = {
 }
 const numpadButtons = document.querySelectorAll(".digit-button");
 const dotButton = document.querySelector("#dot-button");
-const signButtons = document.querySelectorAll("sign-button");
+const signButtons = document.querySelectorAll(".sign-button");
 
 dotButton.addEventListener("click", function(){
-    displayInput(this.dataset.value);
+    if (operationsData.checkIfDotAllowed()){
+        displayInput(this.dataset.value);
     operationsData.appendNumberOrDot(this.dataset.value);
+    }
 });
 
 signButtons.forEach(function(signButton){
     signButton.addEventListener("click", function(){
-
+        console.log(this);
+        if(operationsData.checkIfSignAllowed()){
+            operationsData.sign = this.dataset.value;
+            inputSection.textContent+=this.dataset.value;
+        }
     });
 });
 
