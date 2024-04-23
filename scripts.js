@@ -2,6 +2,8 @@ const outputSection = document.querySelector("#output");
 
 const inputSection = document.querySelector("#input");
 
+const equalityButton = document.querySelector("#equality-button");
+console.log(equalityButton);
 // let sign = "+";
 // let num1 = 3;
 // let num2 = 6;
@@ -26,7 +28,20 @@ function multiply (num1 = 3,num2 = 4) { return num1*num2; }
 function divide(num1 = 6, num2 = 3){ return num1 / num2; }
 
 function operate(op, num1, num2 ){
-
+    switch (op){
+        case "+":{
+            return add(num1,num2);
+        }
+        case "-":{
+            return subtract(num1,num2);
+        }
+        case "*":{
+            return multiply(num1,num2);
+        }
+        case "/":{
+            return divide(num1,num2);
+        }
+    }
 }
 
 
@@ -106,7 +121,7 @@ dotButton.addEventListener("click", function(){
 
 signButtons.forEach(function(signButton){
     signButton.addEventListener("click", function(){
-        console.log(this);
+        console.log(this); 
         if(operationsData.checkIfSignAllowed()){
             operationsData.sign = this.dataset.value;
             inputSection.textContent+=this.dataset.value;
@@ -121,6 +136,11 @@ numpadButtons.forEach(function (numButton){
     })
 });
         
+equalityButton.addEventListener("click", function(){
+    [operator, op1, op2] = [operationsData.sign, operationsData.operand1, operationsData.operand2];
+    console.log(operator,op1,op2);
+    outputSection.textContent = operate(operator, +op1, +op2);
+});
 
 
 
