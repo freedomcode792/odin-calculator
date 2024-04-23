@@ -68,6 +68,10 @@ const operationsData = {
     removeChar : function (){
 
     },
+
+    checkIfDotLast : function(operand){
+        return operand.match(/.*\.$/) !== null;
+    },
     
     checkIfSignAllowed : function(){
         const currentOperandValue = this[this.getCurrentOperandKey()];
@@ -89,21 +93,19 @@ const operationsData = {
         }
     },
 
-    // dotIsAllowed : function(){
-    //     if(sign){
-    //         if (this.operand2){
-    //             return !(this.operand1.match(/[.]/));
-    //         } else {
-    //             return false;
-    //         }
-    //     } else if (!sign){
-    //         if (this.operand1){
-    //             return !(this.operand2.match(/[.]/));
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // }
+    checkIfCanOperate : function(){
+        if(!(this.sign)){
+            console.log("No operation chosen");
+            return false;
+        } else if(!(this.operand1)||!(this.operand2)){
+            console.log("Fill in two operands");
+            return false;
+        } else if (this.checkIfDotLast(this.operand2)){
+            console.log("Fill in the decimals");
+            return false;
+        } else return true;
+        
+    }
 
     
 
@@ -138,8 +140,10 @@ numpadButtons.forEach(function (numButton){
         
 equalityButton.addEventListener("click", function(){
     [operator, op1, op2] = [operationsData.sign, operationsData.operand1, operationsData.operand2];
-    console.log(operator,op1,op2);
-    outputSection.textContent = operate(operator, +op1, +op2);
+    if(operationsData.checkIfCanOperate()){
+        outputSection.textContent = operate(operator, +op1, +op2);
+    }
+    
 });
 
 
