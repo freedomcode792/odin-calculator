@@ -41,8 +41,10 @@ const operationsData = {
     operand1 : "",
     operand2 : "",
     sign : "",
+    result : "",
 
     getCurrentOperandKey : function(){
+        console.log(this.sign);
         return this.sign === "" ? "operand1" : "operand2";
     },
 
@@ -53,20 +55,32 @@ const operationsData = {
     },
 
     appendNumberOrDot : function (char){
+        console.log("append ", char);
         this[this.getCurrentOperandKey()] += char;
     },
+
+
 
     removeLastChar : function (){
         
             if (this.operand1) {
                 if (this.sign) {
                     if(this.operand2){
-                        this.operand2 = this.operand2.slice(0,-1);
+                        const out2 = this.operand2.slice(0,-1);
+                        console.log(`${out2}test`);
+                        this.operand2 = out2;
                     } else {
-                        this.sign = this.sign.slice(0,-1);
+                        
+                        const outSign = this.sign.slice(0,-1);
+                        console.log(`${outSign}test`);
+                        this.sign = outSign;
                     }
                 } else{
-                    this.operand1 = this.operand1.slice(0,-1);
+                    const op1 = this.operand1.slice(0,-1);
+                    console.log(`${op1}test`);
+
+                    this.operand1 = op1;
+                    
                 }
 
                 this.displayData(inputSection);
@@ -83,6 +97,7 @@ const operationsData = {
     
     checkIfSignAllowed : function(){
         const currentOperandValue = this[this.getCurrentOperandKey()];
+        console.log(currentOperandValue);
         if(currentOperandValue){
             console.log("Operand Defined");
             
@@ -113,6 +128,28 @@ const operationsData = {
             return false;
         } else return true;
     },
+
+    
+    /*
+        if(a digit button is pressed){
+            if(there is answer present){
+                empty operands
+                empty answer
+                empty sign
+                add the button value
+            }
+        }
+
+        if (a sign button is pressed){
+            if(there is answer present){
+                equate the first operand to answer
+                empty second operand
+                empty answer
+                set the sign to the newly chosen value
+            }
+        }
+    */  
+
 }
 const numpadButtons = document.querySelectorAll(".digit-button");
 const dotButton = document.querySelector("#dot-button");
@@ -129,8 +166,15 @@ dotButton.addEventListener("click", function(){
 
 signButtons.forEach(function(signButton){
     signButton.addEventListener("click", function(){
-        console.log(this); 
-        if(operationsData.checkIfSignAllowed()){
+        
+        if(operationsData.result){
+            operationsData.operand1 = operationsData.result;
+            operationsData.operand2 = operationsData.result = "";
+            inputSection.textContent = operationsData.operand1;
+            outputSection.textContent = "";
+            inputSection.textContent+=this.dataset.value;
+            operationsData.sign = this.dataset.value;
+        } else if(operationsData.checkIfSignAllowed()){
             operationsData.sign = this.dataset.value;
             inputSection.textContent+=this.dataset.value;
         }
@@ -139,6 +183,13 @@ signButtons.forEach(function(signButton){
 
 numpadButtons.forEach(function (numButton){
     numButton.addEventListener("click", function(){
+
+            if(operationsData.result){
+                console.log('****');
+                operationsData.operand1 = operationsData.operand2 = operationsData.result = operationsData.sign = "";
+                inputSection.textContent = outputSection.textContent = "";
+            }
+
         displayInput(this.dataset.value);
         operationsData.appendNumberOrDot(this.dataset.value);
     })
@@ -147,7 +198,7 @@ numpadButtons.forEach(function (numButton){
 equalityButton.addEventListener("click", function(){
     [operator, op1, op2] = [operationsData.sign, operationsData.operand1, operationsData.operand2];
     if(operationsData.checkIfCanOperate()){
-        outputSection.textContent = operate(operator, parseFloat(op1), parseFloat(op2));
+        outputSection.textContent = operationsData.result = operate(operator, parseFloat(op1), parseFloat(op2));
     }
     
 });
@@ -162,50 +213,9 @@ function displayInput(charInput){
     if(inputSection.textContent.match(/[a-z]/i)){
         inputSection.textContent = "";
     }
+    
     inputSection.textContent += charInput;
+    console.log(`${inputSection.textContent}test`);
 }
-
-
-
-/*
-    Break the process into components
-        1. digit buttons {
-            1) Make the number pressed appear in the input
-            2) Append the number pressed into object {
-                1) if sign symbol is defined -> append to the second operand
-                2) if sign isn't defined -> append to the first operand
-            }
-            3) Add the possibility to press a sign {
-                1) if there is no number before the sign -> display error
-                2) if there is a sign already defined -> display error
-                3) if there a number before the sign and no sign is defined -> add sign to the input
-                4) add sign to the object
-            }
-            
-
-        }
-
-It should work like so:
-        1. The user presses number buttons and types the first operand {
-            - Operands should be typed digit by digit
-            - Each digit has to be added to the data object {
-                  - The digit has to be added to the appropriate operand1 {
-                        - if a sign hasn't been pressed -> add digit to operand1
-                        - if a sign is pressed -> add digit to operand2
-                    }
-                  - There has to be a check to verify if it's really a digit {
-                        - It will probably be appropriate to put all methods related 
-                        to data addition, manipulation and checks into the Data object.
-                    }
-              }
-            - Each new digit should be added to the Input section
-        }
-
-        2. The user presses a sign and the first number is complete. The second number starts
-        3. The user types in the second operand until them press OPERATE (=) sign
-        4. The expression is calculated and the result is displayed in the output section
-
-*/      
-
 
 
