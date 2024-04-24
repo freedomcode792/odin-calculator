@@ -4,26 +4,17 @@ const inputSection = document.querySelector("#input");
 
 const equalityButton = document.querySelector("#equality-button");
 console.log(equalityButton);
-// let sign = "+";
-// let num1 = 3;
-// let num2 = 6;
-
-// console.table(sign,num1,num2);
 
 function displayResult(data, functionName){
     //output.textContent = data;
     console.log(functionName, data);
 }
 
-function add(num1 = 4, num2 = 2){
-    return num1 + num2;
-}
+function add(num1 = 4, num2 = 2){ return num1 + num2; }
 
 function subtract(num1 = 7, num2 = 6){ return num1-num2; }
 
 function multiply (num1 = 3,num2 = 4) { return num1*num2; } 
-
-
 
 function divide(num1 = 6, num2 = 3){ return num1 / num2; }
 
@@ -65,8 +56,25 @@ const operationsData = {
         this[this.getCurrentOperandKey()] += char;
     },
 
-    removeChar : function (){
+    removeLastChar : function (){
+        
+            if (this.operand1) {
+                if (this.sign) {
+                    if(this.operand2){
+                        this.operand2 = this.operand2.slice(0,-1);
+                    } else {
+                        this.sign = this.sign.slice(0,-1);
+                    }
+                } else{
+                    this.operand1 = this.operand1.slice(0,-1);
+                }
 
+                this.displayData(inputSection);
+
+            } else console.log("nothing to remove");
+    },
+    displayData : function(inputField){
+        inputField.textContent = `${this.operand1} ${this.sign} ${this.operand2}`;
     },
 
     checkIfDotLast : function(operand){
@@ -104,15 +112,13 @@ const operationsData = {
             console.log("Fill in the decimals");
             return false;
         } else return true;
-        
-    }
-
-    
-
+    },
 }
 const numpadButtons = document.querySelectorAll(".digit-button");
 const dotButton = document.querySelector("#dot-button");
 const signButtons = document.querySelectorAll(".sign-button");
+const removeButton = document.querySelector("#remove-button");
+
 
 dotButton.addEventListener("click", function(){
     if (operationsData.checkIfDotAllowed()){
@@ -141,9 +147,13 @@ numpadButtons.forEach(function (numButton){
 equalityButton.addEventListener("click", function(){
     [operator, op1, op2] = [operationsData.sign, operationsData.operand1, operationsData.operand2];
     if(operationsData.checkIfCanOperate()){
-        outputSection.textContent = operate(operator, +op1, +op2);
+        outputSection.textContent = operate(operator, parseFloat(op1), parseFloat(op2));
     }
     
+});
+
+removeButton.addEventListener("click", function(){
+    operationsData.removeLastChar();
 });
 
 
